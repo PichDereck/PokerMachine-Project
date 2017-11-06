@@ -84,7 +84,6 @@ void SelonFichier(bool fin2)
 	{
 		fichierlecture>>mise;
 		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;
-	
 	}
 	
 	
