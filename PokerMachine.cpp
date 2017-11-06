@@ -7,7 +7,7 @@
 #include <iomanip>
 
 using namespace std;
-//Hello
+
 struct carte
 {
 	string nom;
