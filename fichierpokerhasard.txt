@@ -1,0 +1,5 @@
+3 3 coeur
+AS 14 trefle
+2 2 pique
+6 6 pique
+AS 14 pique
