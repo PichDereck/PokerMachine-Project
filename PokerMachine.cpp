@@ -8,6 +8,7 @@
 
 using namespace std;
 //Hello
+//hi
 struct carte
 {
 	string nom;
