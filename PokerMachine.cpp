@@ -7,8 +7,12 @@
 #include <iomanip>
 
 using namespace std;
+<<<<<<< HEAD
 //Hello
 //hi
+=======
+
+>>>>>>> parent of 9374a04... Revert "Revert "Added //Hello""
 struct carte
 {
 	string nom;
