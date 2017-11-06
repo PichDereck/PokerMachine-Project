@@ -93,6 +93,7 @@ void SelonFichier(bool fin2)
 
 int main()
 {
+	//J'aime les babouins
 	int choix;
 	carte paquet[54];
 	bool fin=false;
