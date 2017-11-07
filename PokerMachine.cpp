@@ -80,11 +80,12 @@ void SelonFichier(bool fin2)
 		cout<<"Impossible d'ouvrir le fichier"<<endl;
 		fin2=true;
     }
-	else
-	{
-		fichierlecture>>mise;
-		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;
+    else
+    {
+    	fichierlecture>>mise;
+		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;	
 	}
+
 }
 
 int main()
