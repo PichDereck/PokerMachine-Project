@@ -22,7 +22,7 @@ void RandomDeck(carte paquet2[])
 	
 	srand(time(NULL));
 	
-	const string ncarte[14]={"2","3","4","5","6","7","8","9","10","V","D","R","AS","JK"};
+	const string ncarte[14]={"2","3","4","5","6","7","8","9","10","J","Q","K","AS","JK"};
 	const string scarte[4]={"pique","coeur","trefle","carreau"};
 	const string sjoker[2]={"jk1","jk2"};
 	
