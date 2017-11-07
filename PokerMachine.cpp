@@ -91,6 +91,7 @@ void SelonFichier(bool fin2)
 {
 	float mise;
 	carte paquettxt[54];
+	int formatlength;
 
 	fstream fichierlecture("fichierpoker.txt",ios::in);
 		
@@ -115,7 +116,12 @@ void SelonFichier(bool fin2)
 		
 		for(int i=0;i<5;i++)
 		{
-			cout<<paquettxt[i].nom<<" "<<paquettxt[i].valeur<<" "<<paquettxt[i].sorte<<endl;
+			paquettxt[i].nom.length() + formatlength = formatlength;
+		}
+		
+		for(int i=0;i<5;i++)
+		{
+			cout<<setw(formatlength)<<paquettxt[i].nom<<" "<<paquettxt[i].valeur<<" "<<paquettxt[i].sorte<<endl;
 		}
 	}
 }
