@@ -78,7 +78,7 @@ void BubbleSort(carte paquetsort[])
 		change=false;
 		for(int i=0; i<4; i++)
 		{
-			if(paquetsort[i].valeur<paquetsort[i+1].valeur)
+			if(paquetsort[i].valeur>paquetsort[i+1].valeur)
 			{
 				swap(paquetsort[i], paquetsort[i+1]);
 				change=true;
@@ -109,20 +109,20 @@ void SelonFichier(bool fin2)
 		{
 			fichierlecture>>paquettxt[i].nom;
 			fichierlecture>>paquettxt[i].valeur;
-			fichierlecture>>paquettxt[i].sorte;	
+			fichierlecture>>paquettxt[i].sorte;
 		}
 		
 		BubbleSort(paquettxt);
 		
 		for(int i=0;i<5;i++)
 		{
-			formatlength = paquettxt[i].nom.length() + formatlength + 4;
+			formatlength = paquettxt[i].nom.length() + paquettxt[i].sorte.length() + formatlength + 5;
 		}
 		
 		cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 		for(int i=0;i<5;i++)
 		{
-			cout<<"| "<<paquettxt[i].nom<<" |";
+			cout<<"| "<<paquettxt[i].nom<<"-"<<paquettxt[i].sorte<<" |";
 		}
 		cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 	}
