@@ -69,12 +69,31 @@ void Hasard(carte paquet3[])
 	fichierecriture.close();
 }
 
+void BubbleSort(carte paquetsort[])
+{
+	bool change=true;	
+	
+	while(change==true)
+	{
+		change=false;
+		for(int i=0; i<4; i++)
+		{
+			if(paquetsort[i].valeur<paquetsort[i+1].valeur)
+			{
+				swap(paquetsort[i], paquetsort[i+1]);
+				change=true;
+			}
+		}
+	}
+}
+
 void SelonFichier(bool fin2)
 {
 	float mise;
-	
+	carte paquettxt[54];
+
 	fstream fichierlecture("fichierpoker.txt",ios::in);
-	
+		
     if (!fichierlecture)
     {
 		cout<<"Impossible d'ouvrir le fichier"<<endl;
@@ -83,10 +102,24 @@ void SelonFichier(bool fin2)
     else
     {
     	fichierlecture>>mise;
-		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;	
+		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;
+		
+		for(int i=0;i<5;i++)
+		{
+			fichierlecture>>paquettxt[i].nom;
+			fichierlecture>>paquettxt[i].valeur;
+			fichierlecture>>paquettxt[i].sorte;	
+		}
+		
+		BubbleSort(paquettxt);
+		
+		for(int i=0;i<5;i++)
+		{
+			cout<<paquettxt[i].nom<<" "<<paquettxt[i].valeur<<" "<<paquettxt[i].sorte<<endl;
+		}
 	}
-
 }
+
 
 int main()
 {
