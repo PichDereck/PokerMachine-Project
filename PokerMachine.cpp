@@ -116,13 +116,15 @@ void SelonFichier(bool fin2)
 		
 		for(int i=0;i<5;i++)
 		{
-			paquettxt[i].nom.length() + formatlength = formatlength;
+			formatlength = paquettxt[i].nom.length() + formatlength + 4;
 		}
 		
+		cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 		for(int i=0;i<5;i++)
 		{
-			cout<<setw(formatlength)<<paquettxt[i].nom<<" "<<paquettxt[i].valeur<<" "<<paquettxt[i].sorte<<endl;
+			cout<<"| "<<paquettxt[i].nom<<" |";
 		}
+		cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 	}
 }
 
