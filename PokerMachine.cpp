@@ -250,7 +250,7 @@ void SelonFichier(bool fin, carte paquetsf[])
 		
 		main++;
 	}
-	fichierlecture.close():
+	fichierlecture.close();
 }
 
 int main()
