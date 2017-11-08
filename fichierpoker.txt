@@ -1,9 +1,9 @@
 50.00
 Q 12 pique
-AS 14 pique
-10 10 pique
-K 13 pique
 J 11 pique
+AS 14 pique
+K 13 pique
+10 10 pique
 40.00
 2 2 carreau
 4 4 carreau
