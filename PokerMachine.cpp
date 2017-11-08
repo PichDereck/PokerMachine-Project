@@ -132,6 +132,7 @@ float CheckHand(int main, carte paquettxt[][5])
 	float tmp=0;
 	int vcarte[5];
 	string scarte[5];
+	int cond=0;
 	
 	for(int j=0;j<5;j++)
 	{
@@ -140,27 +141,27 @@ float CheckHand(int main, carte paquettxt[][5])
 	}
 	
 	//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Flush Royale
-	if(vcarte[0]==vcarte[1]-1)
+	for(int i=0;i<5;i++)
 	{
-		if(vcarte[0]==vcarte[2]-2)
+		if(vcarte[i]==vcarte[i+1]-i+1)
 		{
-			if(vcarte[0]==vcarte[3]-3)
+			cond++;
+			cout<<cond;
+		}
+	}
+	
+	if(i==4)
+	{
+		cout<<"STRAIGHT ";
+		tmp=20;
+		if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
+		{
+			cout<<"FLUSH ";
+			tmp=tmp+10;
+			if(vcarte[0]==10&&vcarte[1]==11&&vcarte[2]==12&&vcarte[3]==13&&vcarte[4]==14)
 			{
-				if(vcarte[0]==vcarte[4]-4)
-				{
-					cout<<"STRAIGHT ";
-					tmp=20;
-					if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
-					{
-						cout<<"FLUSH ";
-						tmp=tmp+10;
-						if(vcarte[0]==10&&vcarte[1]==11&&vcarte[2]==12&&vcarte[3]==13&&vcarte[4]==14)
-						{
-							cout<<"ROYALE";
-							tmp=tmp+10;
-						}
-					}
-				}
+				cout<<"ROYALE";
+				tmp=tmp+10;
 			}
 		}
 	}
@@ -181,6 +182,7 @@ float CheckHand(int main, carte paquettxt[][5])
 			tmp=15;
 		}		
 	}
+	
 	 //Regarde si Full House
 	if((vcarte[0]==vcarte[1]&&vcarte[2]==vcarte[3]&&vcarte[2]==vcarte[4])||(vcarte[0]==vcarte[1]&&vcarte[0]==vcarte[2]&&vcarte[3]==vcarte[4]))
 	{
@@ -189,11 +191,13 @@ float CheckHand(int main, carte paquettxt[][5])
 	}
 		if(tmp==0)
 	{
-	for(int q=0;q<2;q++)
+		
+	//Regarde si Three of a kind
+	for(int i=0;i<=2;i++)
 	{
-		if(vcarte[q]==vcarte[q+1]&&vcarte[q]==vcarte[q+2])
+		if(vcarte[i]==vcarte[i+1]&&vcarte[i]==vcarte[i+2])
 		{
-			cout<<"3 of a kind";
+			cout<<"THREE OF A KIND";
 			tmp=5;
 		}
 	}
