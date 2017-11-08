@@ -126,28 +126,35 @@ void VerifieDonne(carte paquettxt[][5], carte paquetsf[], int lignes)
 	}
 }
 
-//Cette fonction vérifie qu'elle est la main gagnante et renvoie le gains en float
+//Cette fonction vérifie qu'elle est la main gagnante et renvoie le gain en float
 float CheckHand(int main, carte paquettxt[][5])
 {
-	int i=0;
 	float tmp=0;
+	int vcarte[5];
+	string scarte[5];
 	
-	//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Royale
-	if(paquettxt[main][i].valeur==paquettxt[main][i+1].valeur-1)
+	for(int j=0;j<5;j++)
 	{
-		if(paquettxt[main][i].valeur==paquettxt[main][i+2].valeur-2)
+		vcarte[j]=paquettxt[main][j].valeur;
+		scarte[j]=paquettxt[main][j].sorte;
+	}
+	
+	//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Flush Royale
+	if(vcarte[0]==vcarte[1]-1)
+	{
+		if(vcarte[0]==vcarte[2]-2)
 		{
-			if(paquettxt[main][i].valeur==paquettxt[main][i+3].valeur-3)
+			if(vcarte[0]==vcarte[3]-3)
 			{
-				if(paquettxt[main][i].valeur==paquettxt[main][i+4].valeur-4)
+				if(vcarte[0]==vcarte[4]-4)
 				{
 					cout<<"STRAIGHT ";
 					tmp=20;
-					if(paquettxt[main][i].sorte==paquettxt[main][i+1].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+2].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+3].sorte)
+					if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
 					{
 						cout<<"FLUSH ";
 						tmp=tmp+10;
-						if(paquettxt[main][i].valeur==10&&paquettxt[main][i+1].valeur==11&&paquettxt[main][i+2].valeur==12&&paquettxt[main][i+3].valeur==13&&paquettxt[main][i+4].valeur==14)
+						if(vcarte[0]==10&&vcarte[1]==11&&vcarte[2]==12&&vcarte[3]==13&&vcarte[4]==14)
 						{
 							cout<<"ROYALE";
 							tmp=tmp+10;
@@ -159,7 +166,7 @@ float CheckHand(int main, carte paquettxt[][5])
 	}
 	
 	//Regarde si Four of a kind
-	if(paquettxt[main][i].valeur==paquettxt[main][i+1].valeur&&paquettxt[main][i].valeur==paquettxt[main][i+2].valeur&&paquettxt[main][i].valeur==paquettxt[main][i+3].valeur)
+	if(vcarte[0]==vcarte[1]&&vcarte[0]==vcarte[2]&&vcarte[0]==vcarte[3])
 	{
 		cout<<"FOUR OF A KIND";
 		tmp=25;
@@ -168,14 +175,14 @@ float CheckHand(int main, carte paquettxt[][5])
 	//Regarde si Flush
 	if(tmp<30)
 	{
-		if(paquettxt[main][i].sorte==paquettxt[main][i+1].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+2].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+3].sorte)
+		if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
 		{
 			cout<<"FLUSH";
 			tmp=15;
 		}		
 	}
-	
-	if((paquettxt[main][i].valeur==paquettxt[main][i+1].valeur&&paquettxt[main][i+2].valeur==paquettxt[main][i+3].valeur&&paquettxt[main][i+2].valeur==paquettxt[main][i+4].valeur)||(paquettxt[main][i].valeur==paquettxt[main][i+1].valeur&&paquettxt[main][i].valeur==paquettxt[main][i+2].valeur&&paquettxt[main][i+3].valeur==paquettxt[main][i+4].valeur))
+	 //Regarde si Full House
+	if((vcarte[0]==vcarte[1]&&vcarte[2]==vcarte[3]&&vcarte[2]==vcarte[4])||(vcarte[0]==vcarte[1]&&vcarte[0]==vcarte[2]&&vcarte[3]==vcarte[4]))
 	{
 		cout<<"FULL HOUSE";
 		tmp=10;
@@ -242,7 +249,7 @@ void SelonFichier(bool fin, carte paquetsf[])
 		}
 		cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 		
-		//Va me chercher le gain à multiplier la mise avec selon la main
+		//Va me chercher le gain à multiplier avec la mise selon la main
 		gains = CheckHand(main,paquettxt);
 		
 		cout<<"Vos gains : "<<gains*mises[main]<<endl;
