@@ -203,6 +203,7 @@ void SelonFichier(bool fin, carte paquetsf[])
     {
 		cout<<"Impossible d'ouvrir le fichier"<<endl;
 		fin=true;
+		fichierlecture.close();
     }
     
 	lignes=LignesFichier();
@@ -249,7 +250,7 @@ void SelonFichier(bool fin, carte paquetsf[])
 		
 		main++;
 	}
-
+	fichierlecture.close():
 }
 
 int main()
