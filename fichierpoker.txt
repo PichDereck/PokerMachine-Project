@@ -4,45 +4,51 @@ AS 14 pique
 10 10 pique
 K 13 pique
 J 11 pique
-75.00
+40.00
 2 2 carreau
 4 4 carreau
 6 6 carreau
 3 3 carreau
 5 5 carreau
-90.00
+30.00
 7 7 pique
 7 7 carreau
 AS 14 coeur
 7 7 trefle
 7 7 coeur
-10.00
+20.00
 Q 12 carreau
 10 10 carreau
 AS 14 carreau
 J 11 carreau
 K 13 carreau
-120.00
+10.00
 8 8 trefle
 2 2 trefle
 10 10 trefle
 3 3 trefle
 9 9 trefle
-35.00
+5.00
 J 11 trefle
 8 8 pique
 8 8 coeur
 J 11 coeur
 8 8 carreau
-15.00
+1.00
 9 9 carreau
 9 9 coeur
 AS 14 trefle
 9 9 pique
 K 13 coeur
-25.00
+100.00
 3 3 pique
 2 2 coeur
 6 6 trefle
 3 3 coeur
 2 2 pique
+400.00
+6 6 pique
+9 9 pique
+10 10 coeur
+Q 12 coeur
+K 13 trefle

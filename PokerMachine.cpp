@@ -5,6 +5,8 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#include <typeinfo>
+#include <iterator>
 
 using namespace std;
 
@@ -53,14 +55,13 @@ void RandomDeck(carte paquet2[])
 	}
 	
 	random_shuffle(paquet2, paquet2+54);
+
 }
 
 void Hasard(carte paquet3[])
-{	
-	int i;
-	
+{
 	fstream fichierecriture("fichierpokerhasard.txt",ios::out);
-	for(i=0;i<5;i++)
+	for(int i=0;i<54;i++)
 	{
 		fichierecriture<<paquet3[i].nom<<" ";
 		fichierecriture<<paquet3[i].valeur<<" ";
@@ -69,7 +70,7 @@ void Hasard(carte paquet3[])
 	fichierecriture.close();
 }
 
-void BubbleSort(carte paquetsort[])
+void BubbleSort(int j, carte paquetsort[][5])
 {
 	bool change=true;	
 	
@@ -78,20 +79,35 @@ void BubbleSort(carte paquetsort[])
 		change=false;
 		for(int i=0; i<4; i++)
 		{
-			if(paquetsort[i].valeur>paquetsort[i+1].valeur)
+			if(paquetsort[j][i].valeur>paquetsort[j][i+1].valeur)
 			{
-				swap(paquetsort[i], paquetsort[i+1]);
+				swap(paquetsort[j][i], paquetsort[j][i+1]);
 				change=true;
 			}
 		}
 	}
 }
 
-void SelonFichier(bool fin2)
+int LignesFichier()
 {
-	float mise;
-	carte paquettxt[54];
-	int formatlength;
+	fstream fichierlecture("fichierpoker.txt",ios::in);
+	
+	fichierlecture.unsetf(ios_base::skipws);
+
+    int lignes = count(
+        istream_iterator<char>(fichierlecture),
+        istream_iterator<char>(), 
+        '\n');
+        
+    fichierlecture.close();
+    
+    return lignes;
+}
+
+
+void SelonFichier(bool fin2, carte paquetsf[])
+{
+	int formatlength,lignes,j=0;
 
 	fstream fichierlecture("fichierpoker.txt",ios::in);
 		
@@ -100,32 +116,44 @@ void SelonFichier(bool fin2)
 		cout<<"Impossible d'ouvrir le fichier"<<endl;
 		fin2=true;
     }
-    else
-    {
-    	fichierlecture>>mise;
-		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;
-		
-		for(int i=0;i<5;i++)
+    
+	lignes=LignesFichier();
+	
+	float mises[lignes/6];
+	carte paquettxt[lignes/6][5];
+	
+	for(int i=0;i<lignes/6;i++)
+	{
+		fichierlecture>>mises[i];
+		for(int k=0;k<5;k++)
 		{
-			fichierlecture>>paquettxt[i].nom;
-			fichierlecture>>paquettxt[i].valeur;
-			fichierlecture>>paquettxt[i].sorte;
+			fichierlecture>>paquettxt[i][k].nom;
+			fichierlecture>>paquettxt[i][k].valeur;
+			fichierlecture>>paquettxt[i][k].sorte;
+			paquettxt[i][k].donne=true;
 		}
+	}
+	
+	while(j!=lignes/6)
+	{
+		BubbleSort(j,paquettxt);
+		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mises[j]<<"$"<<endl;
 		
-		BubbleSort(paquettxt);
-		
+		formatlength=0;
 		for(int i=0;i<5;i++)
 		{
-			formatlength = paquettxt[i].nom.length() + paquettxt[i].sorte.length() + formatlength + 5;
+			formatlength = paquettxt[j][i].nom.length() + paquettxt[j][i].sorte.length() + formatlength + 5;
 		}
 		
 		cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 		for(int i=0;i<5;i++)
 		{
-			cout<<"| "<<paquettxt[i].nom<<"-"<<paquettxt[i].sorte<<" |";
+			cout<<"| "<<paquettxt[j][i].nom<<"-"<<paquettxt[j][i].sorte<<" |";
 		}
 		cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
+		j++;
 	}
+
 }
 
 
@@ -150,7 +178,8 @@ int main()
 		        Hasard(paquet);
 			    break;
 			case 2:
-				SelonFichier(fin);
+				RandomDeck(paquet);
+				SelonFichier(fin,paquet);
 			    break;
 			case 3:
 			    cout<<"Fin du jeu de poker"<<endl;
