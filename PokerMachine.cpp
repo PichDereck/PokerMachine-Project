@@ -187,6 +187,17 @@ float CheckHand(int main, carte paquettxt[][5])
 		cout<<"FULL HOUSE";
 		tmp=10;
 	}
+		if(tmp==0)
+	{
+	for(int q=0;q<2;q++)
+	{
+		if(vcarte[q]==vcarte[q+1]&&vcarte[q]==vcarte[q+2])
+		{
+			cout<<"3 of a kind";
+			tmp=5;
+		}
+	}
+	}
 	
 	//MANQUE ENCORE 3 POSSIBILITÉS À AJOUTER
 	if(tmp==0)
