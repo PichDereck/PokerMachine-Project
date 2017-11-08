@@ -173,7 +173,7 @@ float CheckHand(int main, carte paquettxt[][5])
 	}
 	
 	//Regarde si Flush
-	if(tmp<30)
+	if(tmp==0)
 	{
 		if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
 		{
@@ -188,7 +188,7 @@ float CheckHand(int main, carte paquettxt[][5])
 		tmp=10;
 	}
 	
-	//MANQUE ENCORE 3 POSSIBILITÉS À AJOUTER
+	//MANQUE ENCORE 2 POSSIBILITÉS À AJOUTER
 	if(tmp==0)
 	{
 		cout<<"LA MAIN N'EST PAS GAGNANTE";
