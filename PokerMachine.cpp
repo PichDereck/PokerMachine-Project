@@ -103,9 +103,7 @@ int LignesFichier()
 
     int lignes = count(
         istream_iterator<char>(fichierlecture),
-        istream_iterator<char>(), 
-        '\n');
-        
+        istream_iterator<char>(), '\n');
     fichierlecture.close();
     
     return lignes;
@@ -129,10 +127,75 @@ void VerifieDonne(carte paquettxt[][5], carte paquetsf[], int lignes)
 	}
 }
 
+//Cette fonction vérifie qu'elle est la main gagnante et renvoie le gains en float
+float CheckHand(int main, carte paquettxt[][5])
+{
+	int i=0;
+	float tmp=0;
+	
+	//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Royale
+	if(paquettxt[main][i].valeur==paquettxt[main][i+1].valeur-1)
+	{
+		if(paquettxt[main][i].valeur==paquettxt[main][i+2].valeur-2)
+		{
+			if(paquettxt[main][i].valeur==paquettxt[main][i+3].valeur-3)
+			{
+				if(paquettxt[main][i].valeur==paquettxt[main][i+4].valeur-4)
+				{
+					cout<<"STRAIGHT ";
+					tmp=20;
+					if(paquettxt[main][i].sorte==paquettxt[main][i+1].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+2].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+3].sorte)
+					{
+						cout<<"FLUSH ";
+						tmp=tmp+10;
+						if(paquettxt[main][i].valeur==10&&paquettxt[main][i+1].valeur==11&&paquettxt[main][i+2].valeur==12&&paquettxt[main][i+3].valeur==13&&paquettxt[main][i+4].valeur==14)
+						{
+							cout<<"ROYALE";
+							tmp=tmp+10;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//Regarde si Four of a kind
+	if(paquettxt[main][i].valeur==paquettxt[main][i+1].valeur&&paquettxt[main][i].valeur==paquettxt[main][i+2].valeur&&paquettxt[main][i].valeur==paquettxt[main][i+3].valeur)
+	{
+		cout<<"FOUR OF A KIND";
+		tmp=25;
+	}
+	
+	//Regarde si Flush
+	if(tmp<30)
+	{
+		if(paquettxt[main][i].sorte==paquettxt[main][i+1].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+2].sorte&&paquettxt[main][i].sorte==paquettxt[main][i+3].sorte)
+		{
+			cout<<"FLUSH";
+			tmp=15;
+		}		
+	}
+	
+	if((paquettxt[main][i].valeur==paquettxt[main][i+1].valeur&&paquettxt[main][i+2].valeur==paquettxt[main][i+3].valeur&&paquettxt[main][i+2].valeur==paquettxt[main][i+4].valeur)||(paquettxt[main][i].valeur==paquettxt[main][i+1].valeur&&paquettxt[main][i].valeur==paquettxt[main][i+2].valeur&&paquettxt[main][i+3].valeur==paquettxt[main][i+4].valeur))
+	{
+		cout<<"FULL HOUSE";
+		tmp=10;
+	}
+	
+	//MANQUE ENCORE 3 POSSIBILITÉS À AJOUTER
+	if(tmp==0)
+	{
+		cout<<"LA MAIN N'EST PAS GAGNANTE";
+	}
+	cout<<endl;
+	return tmp;
+}
+
 //Cette fonction est la fonction principale lors du choix de jouer selon le fichier de mains prédéfinies
 void SelonFichier(bool fin, carte paquetsf[])
 {
 	int formatlength,lignes,main=0;
+	float gains=0;
 
 	fstream fichierlecture("fichierpoker.txt",ios::in);
 		
@@ -164,7 +227,7 @@ void SelonFichier(bool fin, carte paquetsf[])
 	while(main!=lignes/6)
 	{
 		BubbleSort(main,paquettxt);
-		cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mises[main]<<"$"<<endl;
+		cout<<fixed<<setprecision(2)<<endl<<"Voici votre mise : "<<mises[main]<<"$"<<endl;
 		
 		formatlength=0;
 		for(int i=0;i<5;i++)
@@ -178,6 +241,12 @@ void SelonFichier(bool fin, carte paquetsf[])
 			cout<<"| "<<paquettxt[main][i].nom<<"-"<<paquettxt[main][i].sorte<<" |";
 		}
 		cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
+		
+		//Va me chercher le gain à multiplier la mise avec selon la main
+		gains = CheckHand(main,paquettxt);
+		
+		cout<<"Vos gains : "<<gains*mises[main]<<endl;
+		
 		main++;
 	}
 

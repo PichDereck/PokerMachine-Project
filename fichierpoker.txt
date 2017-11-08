@@ -18,7 +18,7 @@ AS 14 coeur
 7 7 coeur
 20.00
 Q 12 carreau
-10 10 carreau
+10 10 coeur
 AS 14 carreau
 J 11 carreau
 K 13 carreau
@@ -49,6 +49,6 @@ K 13 coeur
 400.00
 6 6 pique
 9 9 pique
-10 10 coeur
+10 10 carreau
 Q 12 coeur
 K 13 trefle
