@@ -5,7 +5,6 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
-#include <iterator>
 
 using namespace std;
 
@@ -48,24 +47,12 @@ void DefineDeck(carte paquet[])
 		paquet[i+52].sorte = sjoker[i];
 	}
 }
+
 //Cette fonction mélange un paquet de carte qui a le même format que celui dans la fonction DefineDeck
 void ShuffleDeck(carte paquet[])
 {
 	srand(time(NULL));
 	random_shuffle(paquet, paquet+54);
-}
-
-//Cette fonction écrit le paquet de carte randomisé dans un fichier texte
-void WriteTXT(carte paquet[])
-{
-	fstream fichierecriture("fichierpokerhasard.txt", ios::out | ios::trunc);
-	for(int i=0;i<54;i++)
-	{
-		fichierecriture<<paquet[i].nom<<" ";
-		fichierecriture<<paquet[i].valeur<<" ";
-		fichierecriture << paquet[i].sorte<<endl;
-	}
-	fichierecriture.close();
 }
 
 //Cette fonction trie en ordre croissant de la valeur de chaque carte de la main
