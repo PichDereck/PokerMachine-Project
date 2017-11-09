@@ -23,8 +23,6 @@ void DefineDeck(carte paquet[])
 {
 	int k=0,j=0;
 	
-	srand(time(NULL));
-	
 	const string ncarte[14]={"2","3","4","5","6","7","8","9","10","J","Q","K","AS","JK"};
 	const string scarte[4]={"pique","coeur","trefle","carreau"};
 	const string sjoker[2]={"jk1","jk2"};
@@ -53,11 +51,12 @@ void DefineDeck(carte paquet[])
 //Cette fonction mélange un paquet de carte qui a le même format que celui dans la fonction DefineDeck
 void ShuffleDeck(carte paquet[])
 {
+	srand(time(NULL));
 	random_shuffle(paquet, paquet+54);
 }
 
 //Cette fonction écrit le paquet de carte randomisé dans un fichier texte
-void Hasard(carte paquet[])
+void WriteTXT(carte paquet[])
 {
 	fstream fichierecriture("fichierpokerhasard.txt", ios::out | ios::trunc);
 	for(int i=0;i<54;i++)
@@ -281,11 +280,163 @@ void FormatAffMain(carte paquettxt[])
 	cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 }
 
+//Cette fonction joue selon le hasard d'un paquet
+void Hasard(carte paquet[])
+{	
+	int multiple,pos,numbtochange,indeck=0;
+	carte paquet5[5];
+	float mise=0;
+	char choix;
+	bool validchoice=false, fin=false, changed=false, finjeu=false;
+	bool postochange[5] = {false,false,false,false,false};
+	
+	while(!finjeu)
+	{
+		ShuffleDeck(paquet);
+		
+		for(int i=0;i<5;i++)
+		{
+			paquet5[i].nom=paquet[i].nom;
+			paquet5[i].valeur=paquet[i].valeur;
+			paquet5[i].sorte=paquet[i].sorte;		
+		}
+		
+		DonneTrue(paquet5, paquet);
+		BubbleSort(paquet5);
+		
+		while(mise<=0)
+		{
+			cout<<endl<<"Veuillez entrer votre mise : ";
+			cin>>mise;
+		}
+		
+		FormatAffMain(paquet5);
+		
+		//Va me chercher le gain à multiplier avec la mise selon la main
+		multiple = CheckHand(paquet5,paquet);
+		
+		if(!changed)
+		{
+			while(!validchoice)
+			{
+				cout<<"Voulez vous changer des cartes ? (O/N) ";
+				cin>>choix;
+				choix=toupper(choix);
+				
+				switch (choix)
+				{
+					case 'O':
+						validchoice=true;
+						changed=true;
+						cout<<"Combien de cartes voulez-vous changer ? ";
+						cin>>numbtochange;
+						while(numbtochange<1 or numbtochange>5)
+						{
+							cout<<"Choix Invalide"<<endl;
+							cout<<"Combien de cartes voulez-vous changer ? ";
+							cin>>numbtochange;							
+						}
+						
+						if(numbtochange==5)
+						{
+							for(int i=0;i<5;i++)
+							{
+								postochange[i]=true;
+							}
+						}
+						else
+						{
+							cout<<"Quelles positions de carte voulez-vous changer ? "<<endl;
+							for(int i=0;i<numbtochange;i++)
+							{
+								cin>>pos;
+								if(pos<1 or pos>5 or postochange[pos+1]==true)
+								{
+									cout<<"Choix Invalide"<<endl;
+									i--;
+								}
+								postochange[pos-1]=true;
+							}	
+												
+							ShuffleDeck(paquet); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
+							for(int pos=0;pos<5;pos++)
+							{
+								for(int i=0;i<54;i++)
+								{
+									if(postochange[pos]==true)
+									{
+										if(paquet[i].donne==false)
+										{
+											paquet5[pos]=paquet[i];
+											paquet[i].donne=true;
+											postochange[pos]=false;
+										}
+									}			
+								}
+							}	
+						}
+						
+						BubbleSort(paquet5);
+						FormatAffMain(paquet5);
+						multiple = CheckHand(paquet5,paquet);
+						DetermMain(multiple);
+					    break;
+					case 'N':
+						validchoice=true;
+						DetermMain(multiple);
+					    break;
+					default:
+					    cout << "Choix invalide" << endl << endl;
+					    validchoice=false;
+					    break;
+				}		
+			}			
+		}
+		
+		//Calcule gains ou pertes
+		if(multiple==0)
+		{
+			cout<<"Vos pertes : "<<-(mise)<<endl;
+		}
+		else
+		{
+			cout<<"Vos gains : "<<multiple*mise<<endl;			
+		}
+		
+		changed=false;
+		validchoice=false;
+		
+		while(!validchoice)
+		{
+			cout<<"Voulez vous continuer ? (O/N) ";
+			cin>>choix;
+			choix=toupper(choix);
+			
+			switch (choix)
+			{
+				case 'O':
+					validchoice=true;
+					mise=0;
+				    break;
+				case 'N':
+					validchoice=true;
+					finjeu=true;
+				    break;
+				default:
+				    cout << "Choix invalide" << endl << endl;
+				    validchoice=false;
+				    break;
+			}		
+		}
+		validchoice=false;
+	}
+}
+
 //Cette fonction est la fonction principale lors du choix de jouer selon le fichier de mains prédéfinies
 void SelonFichier(carte paquetsf[])
 {
-	int pos,numbtochange;
-	float multiple,mise;
+	int multiple,pos,numbtochange;
+	float mise;
 	carte paquettxt[5];
 	char choix;
 	bool validchoice=false, fin=false, changed=false;
@@ -416,6 +567,9 @@ void SelonFichier(carte paquetsf[])
 			fichierlecture>>mise;
 		}
 		fin=true;
+		cout<<endl<<"---------------"<<endl;
+		cout<<"FIN DU FICHIER";
+		cout<<endl<<"---------------"<<endl;
 		fichierlecture.close();	
 	}
 }
