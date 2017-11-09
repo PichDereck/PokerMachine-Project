@@ -5,7 +5,6 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
-#include <iterator>
 
 using namespace std;
 
@@ -21,15 +20,13 @@ struct carte
 	{2,3,4...Q,K,AS|2,3,4...Q,K,AS|2,3,4...Q,K,AS|2,3,4...Q,K,AS|JK,JK}*/
 void DefineDeck(carte paquet[])
 {
-	int k=0,j=0,i;
-	
-	srand(time(NULL));
+	int k=0,j=0;
 	
 	const string ncarte[14]={"2","3","4","5","6","7","8","9","10","J","Q","K","AS","JK"};
 	const string scarte[4]={"pique","coeur","trefle","carreau"};
 	const string sjoker[2]={"jk1","jk2"};
 	
-	for(i=0;i<52;i++)
+	for(int i=0;i<52;i++)
 	{
 		paquet[i].nom = ncarte[k];
 		paquet[i].valeur = k+2;
@@ -41,33 +38,25 @@ void DefineDeck(carte paquet[])
 			k=0;
 			j++;
 		}
-		if(j==4)
-		{
-			j=0;
-		}
 	}
 	
-	for(i=52;i<54;i++)
+	for(int i=0;i<2;i++)
 	{
-		paquet[i].nom = ncarte[13];
-		paquet[i].valeur = 15;
-		paquet[i].sorte = sjoker[j];
-		j++;
+		paquet[i+52].nom = ncarte[13];
+		paquet[i+52].valeur = 15;
+		paquet[i+52].sorte = sjoker[i];
 	}
 }
+
 //Cette fonction mélange un paquet de carte qui a le même format que celui dans la fonction DefineDeck
 void ShuffleDeck(carte paquet[])
 {
+	srand(time(NULL));
 	random_shuffle(paquet, paquet+54);
 }
 
-void Hasard()
-{
-	
-}
-
-//Cette fonction trie en ordre croissant de la valeur de chaque carte de la main, cette main qui est associé au 5 éléments de la ligne à laquelle on veut trier (Utilisé seulement pour le fichier prédéfini)
-void BubbleSort(int main, carte paquetsort[][5])
+//Cette fonction trie en ordre croissant de la valeur de chaque carte de la main
+void BubbleSort(carte paquetsort[])
 {
 	bool change=true;	
 	
@@ -76,223 +65,500 @@ void BubbleSort(int main, carte paquetsort[][5])
 		change=false;
 		for(int i=0; i<4; i++)
 		{
-			if(paquetsort[main][i].valeur>paquetsort[main][i+1].valeur)
+			if(paquetsort[i].valeur>paquetsort[i+1].valeur)
 			{
-				swap(paquetsort[main][i], paquetsort[main][i+1]);
+				swap(paquetsort[i], paquetsort[i+1]);
 				change=true;
 			}
 		}
 	}
 }
 
-/*Cette fonction renvoie un INT qui indique le nombre de lignes qu'un fichier texte possède en tout jusqu'à la fin du fichier
-	EX : 
-	J'aime les petits    - Ligne 1
-	bonbons au           - Ligne 2
-	chocolat             - Ligne 3
-	Ce sont mes          - Ligne 4
-	bonbons              - Ligne 5
-	préférés             - Ligne 6
-*/
-int LignesFichier()
+//Cette fonction fait en sorte que les cartes de la main soit donné dans le tableau "paquet de 54 carte en ordre" afin de ne pas pouvoir les piger lors d'un changement de carte
+void DonneTrue(carte paquettxt[], carte paquetsf[])
 {
-	fstream fichierlecture("fichierpoker.txt",ios::in);
-	
-	fichierlecture.unsetf(ios_base::skipws);
-
-    int lignes = count(
-        istream_iterator<char>(fichierlecture),
-        istream_iterator<char>(), '\n');
-    fichierlecture.close();
-    
-    return lignes;
-}
-
-//Cette fonction fait en sorte que les cartes dans le fichier prédéfini comme donné dans le tableau "paquet de 54 carte en ordre" afin de ne pas pouvoir les piger lors d'un changement de carte
-void VerifieDonne(carte paquettxt[][5], carte paquetsf[], int lignes)
-{
-	for(int j=0;j<lignes/6;j++)
+	for(int i=0;i<5;i++)
 	{
-		for(int i=0;i<5;i++)
+		for(int k=0;k<54;k++)
 		{
-			for(int k=0;k<54;k++)
+			if((paquettxt[i].valeur==paquetsf[k].valeur)
+				&&(paquettxt[i].sorte==paquetsf[k].sorte))
 			{
-				if((paquettxt[j][i].valeur==paquetsf[k].valeur)&&(paquettxt[j][i].sorte==paquetsf[k].sorte))
-				{
-					paquetsf[k].donne=true;
-				}
+				paquetsf[k].donne=true;
 			}
 		}
 	}
 }
 
 //Cette fonction vérifie qu'elle est la main gagnante et renvoie le gain en float
-float CheckHand(int main, carte paquettxt[][5])
+int CheckHand(carte paquettxt[], carte paquetsf[])
 {
-	float tmp=0;
-	int vcarte[5];
-	string scarte[5];
-	
-	for(int j=0;j<5;j++)
+	int tmp=0,multiple=0;
+	carte cartes[5];
+	bool onejoker=false;
+	bool twojokers=false;
+
+	for(int jk=0;jk<52;jk++)
 	{
-		vcarte[j]=paquettxt[main][j].valeur;
-		scarte[j]=paquettxt[main][j].sorte;
-	}
-	
-	//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Flush Royale
-	if(vcarte[0]==vcarte[1]-1)
-	{
-		if(vcarte[0]==vcarte[2]-2)
-		{
-			if(vcarte[0]==vcarte[3]-3)
+		for(int jk2=0;jk2<52;jk2++)
+		{	
+			for(int j=0;j<5;j++)
 			{
-				if(vcarte[0]==vcarte[4]-4)
+				cartes[j].valeur=paquettxt[j].valeur;
+				cartes[j].sorte=paquettxt[j].sorte;
+			}
+			
+			if(cartes[4].valeur==15)
+			{
+				onejoker=true;
+				if(cartes[3].valeur==15)
 				{
-					cout<<"STRAIGHT ";
-					tmp=20;
-					if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
+					twojokers=true;
+				}
+			}
+			
+			if(onejoker==true)
+			{
+				cartes[4].valeur=paquetsf[jk2].valeur;
+				cartes[4].sorte=paquetsf[jk2].sorte;
+			}
+			
+			if(twojokers==true)
+			{
+				cartes[3].valeur=paquetsf[jk+1].valeur;
+				cartes[3].sorte=paquetsf[jk+1].sorte;				
+			}
+			
+			//Va mettre les cartes en ordre de croissance de valeur
+			BubbleSort(cartes);
+			
+			//Regarde si Two pairs
+	    	for(int i=0;i<=1;i++)
+		 	{
+		 		if(cartes[i].valeur==cartes[i+1].valeur)
+		 		{
+		 			if(cartes[i+2].valeur==cartes[i+3].valeur)
+		 			{
+		 				tmp=3;
+				 	}
+			 	}
+			}
+			
+			if(cartes[0].valeur==cartes[1].valeur&&cartes[3].valeur==cartes[4].valeur)
+			{
+				tmp=3;
+			}
+			
+			//Regarde si Three of a kind	
+			for(int i=0;i<=2;i++)
+			{
+				if(cartes[i].valeur==cartes[i+1].valeur&&cartes[i].valeur==cartes[i+2].valeur)
+				{
+					tmp=5;
+				}
+			}
+			
+			//Regarde si Full House
+			if((cartes[0].valeur==cartes[1].valeur&&cartes[2].valeur==cartes[3].valeur&&cartes[2].valeur==cartes[4].valeur)
+				or(cartes[0].valeur==cartes[1].valeur&&cartes[0].valeur==cartes[2].valeur&&cartes[3].valeur==cartes[4].valeur))
+			{
+				tmp=10;
+			}
+			
+			//Regarde si Flush
+			if(tmp<30)
+			{
+				if(cartes[0].sorte==cartes[1].sorte&&cartes[0].sorte==cartes[2].sorte&&cartes[0].sorte==cartes[3].sorte)
+				{
+					tmp=15;
+				}		
+			}
+			
+			//Regarde si Four of a kind
+			if((cartes[0].valeur==cartes[1].valeur&&cartes[0].valeur==cartes[2].valeur&&cartes[0].valeur==cartes[3].valeur)
+				or(cartes[1].valeur==cartes[2].valeur&&cartes[1].valeur==cartes[3].valeur&&cartes[1].valeur==cartes[4].valeur))
+			{
+				tmp=25;
+			}
+			
+			//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Flush Royale
+			if(cartes[0].valeur==cartes[1].valeur-1&&cartes[0].valeur==cartes[2].valeur-2
+				&&cartes[0].valeur==cartes[3].valeur-3&&cartes[0].valeur==cartes[4].valeur-4)
+			{
+				tmp=20; //Straight
+				if(cartes[0].sorte==cartes[1].sorte&&cartes[0].sorte==cartes[2].sorte&&cartes[0].sorte==cartes[3].sorte)
+				{
+					tmp=30; //Straight Flush
+					if(cartes[0].valeur==10&&cartes[1].valeur==11&&cartes[2].valeur==12&&cartes[3].valeur==13&&cartes[4].valeur==14)
 					{
-						cout<<"FLUSH ";
-						tmp=tmp+10;
-						if(vcarte[0]==10&&vcarte[1]==11&&vcarte[2]==12&&vcarte[3]==13&&vcarte[4]==14)
-						{
-							cout<<"ROYALE";
-							tmp=tmp+10;
-						}
+						tmp=40; //Straight FLush Royale
 					}
 				}
 			}
-		}
-	}
-	
-	//Regarde si Four of a kind
-	if(vcarte[0]==vcarte[1]&&vcarte[0]==vcarte[2]&&vcarte[0]==vcarte[3])
-	{
-		cout<<"FOUR OF A KIND";
-		tmp=25;
-	}
-	
-	//Regarde si Flush
-	if(tmp==0)
-	{
-		if(scarte[0]==scarte[1]&&scarte[0]==scarte[2]&&scarte[0]==scarte[3])
-		{
-			cout<<"FLUSH";
-			tmp=15;
-		}		
-	}
-	
-	 //Regarde si Full House
-	if((vcarte[0]==vcarte[1]&&vcarte[2]==vcarte[3]&&vcarte[2]==vcarte[4])||(vcarte[0]==vcarte[1]&&vcarte[0]==vcarte[2]&&vcarte[3]==vcarte[4]))
-	{
-		cout<<"FULL HOUSE";
-		tmp=10;
-	}
-	
-	//Regarde si Three of a kind	
-	if(tmp==0)
-	{
-		for(int i=0;i<=2;i++)
-		{
-			if(vcarte[i]==vcarte[i+1]&&vcarte[i]==vcarte[i+2])
+			
+			//À chaque boucle, il garde seulement la valeur la plus haute, pour identifier la meilleure main possible
+			if(tmp>multiple)
 			{
-				cout<<"THREE OF A KIND";
-				tmp=5;
+				multiple=tmp;
+				tmp=0;
 			}
-		}
+		}	
+	}
+	return multiple;
+}
+
+//Détermination de la combinaison selon le multiple
+void DetermMain(int multiple)
+{
+	if(multiple==40)
+	{
+		cout<<"STRAIGHT FLUSH ROYALE - 40x";
+	}
+	if(multiple==30)
+	{
+		cout<<"STRAIGHT FLUSH - 30x";
+	}
+	if(multiple==25)
+	{
+		cout<<"FOUR OF A KIND - 25x";
+	}
+	if(multiple==20)
+	{
+		cout<<"STRAIGHT - 20x";
+	}
+	if(multiple==15)
+	{
+		cout<<"FLUSH - 15x";
+	}
+	if(multiple==10)
+	{
+		cout<<"FULL HOUSE - 10x";
+	}
+	if(multiple==5)
+	{
+		cout<<"THREE OF A KIND - 5x";
+	}
+	if(multiple==3)
+	{
+		cout<<"TWO PAIRS - 3x";
+	}
+	if(multiple==0)
+	{
+		cout<<"HIGH CARD - 0x";
 	}
 	
-	//Regarde si Two pairs
-	if(tmp==0)
+	cout<<endl;
+}
+
+//Affichage relatif selon longueur de string total des noms de cartes de la main en cours
+void FormatAffMain(carte paquettxt[])
+{
+	int formatlength=0;
+	for(int i=0;i<5;i++)
 	{
-    	for(int q=0;q<=1;q++)
-	 	{
-	 		if(vcarte[q]==vcarte[q+1])
-	 		{
-	 			if(vcarte[q+2]==vcarte[q+3])
-	 			{
-	 				cout<<"TWO PAIRS";
-	 				tmp=3;
-			 	}
-		 	}
+		formatlength = paquettxt[i].nom.length() + paquettxt[i].sorte.length() + formatlength + 5;
+	}
+	
+	cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
+	for(int i=0;i<5;i++)
+	{
+		cout<<"| "<<paquettxt[i].nom<<"-"<<paquettxt[i].sorte<<" |";
+	}
+	cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
+}
+
+//Cette fonction joue selon le hasard d'un paquet
+void Hasard(carte paquet[])
+{	
+	int multiple,pos,numbtochange,indeck=0;
+	carte paquet5[5];
+	float mise=0;
+	char choix;
+	bool validchoice=false, fin=false, changed=false, finjeu=false;
+	bool postochange[5] = {false,false,false,false,false};
+	
+	while(!finjeu)
+	{
+		ShuffleDeck(paquet);
+		
+		for(int i=0;i<5;i++)
+		{
+			paquet5[i].nom=paquet[i].nom;
+			paquet5[i].valeur=paquet[i].valeur;
+			paquet5[i].sorte=paquet[i].sorte;		
 		}
 		
-		if(vcarte[0]==vcarte[1]&&vcarte[3]==vcarte[4])
+		DonneTrue(paquet5, paquet);
+		BubbleSort(paquet5);
+		
+		while(mise<=0)
 		{
-			cout<<"TWO PAIRS";
-			tmp=3;
+			cout<<endl<<"Veuillez entrer votre mise : ";
+			cin>>mise;
 		}
-		     
+		
+		FormatAffMain(paquet5);
+		
+		//Va me chercher le gain à multiplier avec la mise selon la main
+		multiple = CheckHand(paquet5,paquet);
+		
+		if(!changed)
+		{
+			while(!validchoice)
+			{
+				cout<<"Voulez vous changer des cartes ? (O/N) ";
+				cin>>choix;
+				choix=toupper(choix);
+				
+				switch (choix)
+				{
+					case 'O':
+						validchoice=true;
+						changed=true;
+						cout<<"Combien de cartes voulez-vous changer ? ";
+						cin>>numbtochange;
+						while(numbtochange<1 or numbtochange>5)
+						{
+							cout<<"Choix Invalide"<<endl;
+							cout<<"Combien de cartes voulez-vous changer ? ";
+							cin>>numbtochange;							
+						}
+						
+						if(numbtochange==5)
+						{
+							for(int i=0;i<5;i++)
+							{
+								postochange[i]=true;
+							}
+						}
+						else
+						{
+							cout<<"Quelles positions de carte voulez-vous changer ? "<<endl;
+							for(int i=0;i<numbtochange;i++)
+							{
+								cin>>pos;
+								if(pos<1 or pos>5 or postochange[pos+1]==true)
+								{
+									cout<<"Choix Invalide"<<endl;
+									i--;
+								}
+								postochange[pos-1]=true;
+							}	
+												
+							ShuffleDeck(paquet); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
+							for(int pos=0;pos<5;pos++)
+							{
+								for(int i=0;i<54;i++)
+								{
+									if(postochange[pos]==true)
+									{
+										if(paquet[i].donne==false)
+										{
+											paquet5[pos]=paquet[i];
+											paquet[i].donne=true;
+											postochange[pos]=false;
+										}
+									}			
+								}
+							}	
+						}
+						
+						BubbleSort(paquet5);
+						FormatAffMain(paquet5);
+						multiple = CheckHand(paquet5,paquet);
+						DetermMain(multiple);
+					    break;
+					case 'N':
+						validchoice=true;
+						DetermMain(multiple);
+					    break;
+					default:
+					    cout << "Choix invalide" << endl << endl;
+					    validchoice=false;
+					    break;
+				}		
+			}			
+		}
+		
+		//Calcule gains ou pertes
+		if(multiple==0)
+		{
+			cout<<"Vos pertes : "<<-(mise)<<endl;
+		}
+		else
+		{
+			cout<<"Vos gains : "<<multiple*mise<<endl;			
+		}
+		
+		changed=false;
+		validchoice=false;
+		
+		while(!validchoice)
+		{
+			cout<<"Voulez vous continuer ? (O/N) ";
+			cin>>choix;
+			choix=toupper(choix);
+			
+			switch (choix)
+			{
+				case 'O':
+					validchoice=true;
+					mise=0;
+				    break;
+				case 'N':
+					validchoice=true;
+					finjeu=true;
+				    break;
+				default:
+				    cout << "Choix invalide" << endl << endl;
+				    validchoice=false;
+				    break;
+			}		
+		}
+		validchoice=false;
 	}
-	
-	if(tmp==0)
-	{
-		cout<<"LA MAIN N'EST PAS GAGNANTE";
-	}
-	cout<<endl;
-	return tmp;
 }
 
 //Cette fonction est la fonction principale lors du choix de jouer selon le fichier de mains prédéfinies
-void SelonFichier(bool fin, carte paquetsf[])
+void SelonFichier(carte paquetsf[])
 {
-	int formatlength,lignes,main=0;
-	float gains=0;
-
-	fstream fichierlecture("fichierpoker.txt",ios::in);
-		
+	int multiple,pos,numbtochange;
+	float mise;
+	carte paquettxt[5];
+	char choix;
+	bool validchoice=false, fin=false, changed=false;
+	bool postochange[5] = {false,false,false,false,false};
+	
+	fstream fichierlecture("fichierpoker.txt",ios::in);		
     if (!fichierlecture)
     {
 		cout<<"Impossible d'ouvrir le fichier"<<endl;
 		fin=true;
 		fichierlecture.close();
     }
-    
-	lignes=LignesFichier();
 	
-	float mises[lignes/6];
-	carte paquettxt[lignes/6][5];
-	
-	for(int i=0;i<lignes/6;i++)
-	{
-		fichierlecture>>mises[i];
-		for(int k=0;k<5;k++)
+	while(!fin)
+	{ 
+		fichierlecture>>mise;
+		while(!fichierlecture.eof())
 		{
-			fichierlecture>>paquettxt[i][k].nom;
-			fichierlecture>>paquettxt[i][k].valeur;
-			fichierlecture>>paquettxt[i][k].sorte;
-			paquettxt[i][k].donne=true;
+			DefineDeck(paquetsf);
+			
+			for(int i=0;i<5;i++)
+			{
+				fichierlecture>>paquettxt[i].nom;
+				fichierlecture>>paquettxt[i].valeur;
+				fichierlecture>>paquettxt[i].sorte;		
+			}
+			
+			DonneTrue(paquettxt,paquetsf);
+	
+			BubbleSort(paquettxt);
+			cout<<fixed<<setprecision(2)<<endl<<"Voici votre mise : "<<mise<<"$"<<endl;
+			
+			FormatAffMain(paquettxt);
+			
+			//Va me chercher le gain à multiplier avec la mise selon la main
+			multiple = CheckHand(paquettxt,paquetsf);
+			
+			if(!changed)
+			{
+				while(!validchoice)
+				{
+					cout<<"Voulez vous changer des cartes ? (O/N) ";
+					cin>>choix;
+					choix=toupper(choix);
+					
+					switch (choix)
+					{
+						case 'O':
+							validchoice=true;
+							changed=true;
+							cout<<"Combien de cartes voulez-vous changer ? ";
+							cin>>numbtochange;
+							while(numbtochange<1 or numbtochange>5)
+							{
+								cout<<"Choix Invalide"<<endl;
+								cout<<"Combien de cartes voulez-vous changer ? ";
+								cin>>numbtochange;							
+							}
+							
+							if(numbtochange==5)
+							{
+								for(int i=0;i<5;i++)
+								{
+									postochange[i]=true;
+								}
+							}
+							else
+							{
+								cout<<"Quelles positions de carte voulez-vous changer ? "<<endl;
+								for(int i=0;i<numbtochange;i++)
+								{
+									cin>>pos;
+									if(pos<1 or pos>5 or postochange[pos+1]==true)
+									{
+										cout<<"Choix Invalide"<<endl;
+										i--;
+									}
+									postochange[pos-1]=true;
+								}	
+													
+								ShuffleDeck(paquetsf); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
+								for(int pos=0;pos<5;pos++)
+								{
+									for(int i=0;i<54;i++)
+									{
+										if(postochange[pos]==true)
+										{
+											if(paquetsf[i].donne==false)
+											{
+												paquettxt[pos]=paquetsf[i];
+												paquetsf[i].donne=true;
+												postochange[pos]=false;
+											}
+										}			
+									}
+								}	
+							}
+							
+							BubbleSort(paquettxt);
+							FormatAffMain(paquettxt);
+							multiple = CheckHand(paquettxt,paquetsf);
+							DetermMain(multiple);
+						    break;
+						case 'N':
+							validchoice=true;
+							DetermMain(multiple);
+						    break;
+						default:
+						    cout << "Choix invalide" << endl << endl;
+						    validchoice=false;
+						    break;
+					}		
+				}			
+			}
+			
+			//Calcule gains ou pertes
+			if(multiple==0)
+			{
+				cout<<"Vos pertes : "<<-(mise)<<endl;
+			}
+			else
+			{
+				cout<<"Vos gains : "<<multiple*mise<<endl;			
+			}
+			
+			changed=false;
+			validchoice=false;
+			fichierlecture>>mise;
 		}
+		fin=true;
+		cout<<endl<<"---------------"<<endl;
+		cout<<"FIN DU FICHIER";
+		cout<<endl<<"---------------"<<endl;
+		fichierlecture.close();	
 	}
-	
-	VerifieDonne(paquettxt,paquetsf,lignes);
-	
-	while(main!=lignes/6)
-	{
-		BubbleSort(main,paquettxt);
-		cout<<fixed<<setprecision(2)<<endl<<"Voici votre mise : "<<mises[main]<<"$"<<endl;
-		
-		formatlength=0;
-		for(int i=0;i<5;i++)
-		{
-			formatlength = paquettxt[main][i].nom.length() + paquettxt[main][i].sorte.length() + formatlength + 5;
-		}
-		
-		cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
-		for(int i=0;i<5;i++)
-		{
-			cout<<"| "<<paquettxt[main][i].nom<<"-"<<paquettxt[main][i].sorte<<" |";
-		}
-		cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
-		
-		//Va me chercher le gain à multiplier avec la mise selon la main
-		gains = CheckHand(main,paquettxt);
-		
-		cout<<"Vos gains : "<<gains*mises[main]<<endl;
-		
-		main++;
-	}
-	fichierlecture.close();
 }
 
 int main()
@@ -314,10 +580,11 @@ int main()
 			case 1:
 		        DefineDeck(paquet);
 		        ShuffleDeck(paquet);
+		        Hasard(paquet);
 			    break;
 			case 2:
 				DefineDeck(paquet);
-				SelonFichier(fin,paquet);
+				SelonFichier(paquet);
 			    break;
 			case 3:
 			    cout<<"Fin du jeu de poker"<<endl;
