@@ -343,24 +343,24 @@ void Hasard(carte paquet[])
 									i--;
 								}
 								postochange[pos-1]=true;
-							}	
-												
-							ShuffleDeck(paquet); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
-							for(int pos=0;pos<5;pos++)
+							}
+						}
+											
+						ShuffleDeck(paquet); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
+						for(int pos=0;pos<5;pos++)
+						{
+							for(int i=0;i<54;i++)
 							{
-								for(int i=0;i<54;i++)
+								if(postochange[pos]==true)
 								{
-									if(postochange[pos]==true)
+									if(paquet[i].donne==false)
 									{
-										if(paquet[i].donne==false)
-										{
-											paquet5[pos]=paquet[i];
-											paquet[i].donne=true;
-											postochange[pos]=false;
-										}
-									}			
-								}
-							}	
+										paquet5[pos]=paquet[i];
+										paquet[i].donne=true;
+										postochange[pos]=false;
+									}
+								}			
+							}
 						}
 						
 						BubbleSort(paquet5);
@@ -460,6 +460,7 @@ void SelonFichier(carte paquetsf[])
 			
 			//Va me chercher le gain à multiplier avec la mise selon la main
 			multiple = CheckHand(paquettxt,paquetsf);
+			cout<<"Voici votre gain possible avec cette main : "<<multiple*mise<<endl;
 			
 			if(!changed)
 			{
@@ -502,26 +503,26 @@ void SelonFichier(carte paquetsf[])
 										i--;
 									}
 									postochange[pos-1]=true;
-								}	
-													
-								ShuffleDeck(paquetsf); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
-								for(int pos=0;pos<5;pos++)
-								{
-									for(int i=0;i<54;i++)
-									{
-										if(postochange[pos]==true)
-										{
-											if(paquetsf[i].donne==false)
-											{
-												paquettxt[pos]=paquetsf[i];
-												paquetsf[i].donne=true;
-												postochange[pos]=false;
-											}
-										}			
-									}
-								}	
+								}
 							}
-							
+												
+							ShuffleDeck(paquetsf); //Pour ne pas qu'il me montre 2-pique, 3-pique... à chaque fois que je refais une main							
+							for(int pos=0;pos<5;pos++)
+							{
+								for(int i=0;i<54;i++)
+								{
+									if(postochange[pos]==true)
+									{
+										if(paquetsf[i].donne==false)
+										{
+											paquettxt[pos]=paquetsf[i];
+											paquetsf[i].donne=true;
+											postochange[pos]=false;
+										}
+									}			
+								}
+							}
+								
 							BubbleSort(paquettxt);
 							FormatAffMain(paquettxt);
 							multiple = CheckHand(paquettxt,paquetsf);
