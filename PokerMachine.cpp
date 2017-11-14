@@ -90,7 +90,7 @@ void DonneTrue(carte paquettxt[], carte paquetsf[])
 	}
 }
 
-//Cette fonction vérifie qu'elle est la main gagnante et renvoie le gain en float
+//Cette fonction vérifie le multiple de gain et le renvoie en int dans la détermination de la main selon le multiple de gain
 int CheckHand(carte paquettxt[], carte paquetsf[])
 {
 	int tmp=0,multiple=0;
@@ -186,7 +186,7 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 				&&cartes[0].valeur==cartes[3].valeur-3&&cartes[0].valeur==cartes[4].valeur-4)
 			{
 				tmp=20; //Straight
-				if(cartes[0].sorte==cartes[1].sorte&&cartes[0].sorte==cartes[2].sorte&&cartes[0].sorte==cartes[3].sorte)
+				if(cartes[0].sorte==cartes[1].sorte&&cartes[0].sorte==cartes[2].sorte&&cartes[0].sorte==cartes[3].sorte&&cartes[0].sorte==cartes[4].sorte)
 				{
 					tmp=30; //Straight Flush
 					if(cartes[0].valeur==10&&cartes[1].valeur==11&&cartes[2].valeur==12&&cartes[3].valeur==13&&cartes[4].valeur==14)
@@ -543,7 +543,7 @@ void SelonFichier(carte paquetsf[])
 			//Calcule gains ou pertes
 			if(multiple==0)
 			{
-				cout<<"Vos pertes : "<<-(mise)<<endl;
+				cout<<"Vos pertes : "<<-mise<<endl;
 			}
 			else
 			{
