@@ -270,8 +270,8 @@ void FormatAffMain(carte paquettxt[])
 //Cette fonction joue selon le hasard d'un paquet
 void Hasard(carte paquet[])
 {	
-	int multiple,pos,numbtochange,indeck=0;
-	carte paquet5[5];
+	int multiple,pos,numbtochange;
+	carte main[5];
 	float mise=0;
 	char choix;
 	bool validchoice=false, fin=false, changed=false, finjeu=false;
@@ -280,16 +280,15 @@ void Hasard(carte paquet[])
 	while(!finjeu)
 	{
 		ShuffleDeck(paquet);
-		
 		for(int i=0;i<5;i++)
 		{
-			paquet5[i].nom=paquet[i].nom;
-			paquet5[i].valeur=paquet[i].valeur;
-			paquet5[i].sorte=paquet[i].sorte;		
+			main[i].nom=paquet[i].nom;
+			main[i].valeur=paquet[i].valeur;
+			main[i].sorte=paquet[i].sorte;		
 		}
 		
-		DonneTrue(paquet5, paquet);
-		BubbleSort(paquet5);
+		DonneTrue(main, paquet);
+		BubbleSort(main);
 		
 		while(mise<=0)
 		{
@@ -297,10 +296,10 @@ void Hasard(carte paquet[])
 			cin>>mise;
 		}
 		
-		FormatAffMain(paquet5);
+		FormatAffMain(main);
 		
 		//Va me chercher le gain à multiplier avec la mise selon la main
-		multiple = CheckHand(paquet5,paquet);
+		multiple = CheckHand(main,paquet);
 		
 		if(!changed)
 		{
@@ -355,7 +354,7 @@ void Hasard(carte paquet[])
 								{
 									if(paquet[i].donne==false)
 									{
-										paquet5[pos]=paquet[i];
+										main[pos]=paquet[i];
 										paquet[i].donne=true;
 										postochange[pos]=false;
 									}
@@ -363,9 +362,9 @@ void Hasard(carte paquet[])
 							}
 						}
 						
-						BubbleSort(paquet5);
-						FormatAffMain(paquet5);
-						multiple = CheckHand(paquet5,paquet);
+						BubbleSort(main);
+						FormatAffMain(main);
+						multiple = CheckHand(main,paquet);
 						DetermMain(multiple);
 					    break;
 					case 'N':
@@ -442,8 +441,6 @@ void SelonFichier(carte paquetsf[])
 		fichierlecture>>mise;
 		while(!fichierlecture.eof())
 		{
-			DefineDeck(paquetsf);
-			
 			for(int i=0;i<5;i++)
 			{
 				fichierlecture>>paquettxt[i].nom;
