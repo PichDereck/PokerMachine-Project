@@ -29,7 +29,7 @@ void MelangerPaquet(carte paquet[])
 void Hasard(carte paquet[])
 {
 	//Cette fonction joue selon la détermination au hasard d'un paquet
-	//Dans cette fonction, on utilise une fonction qui mélange un paquet de carte qui a le même format que celui dans la fonction DefinirPaquet
+	//cela aussi rappele la fonction MelangerPaquet
 	//Dans cette fonction, on utilise une fonction qui fait en sorte que les cartes de la main soit donné dans le tableau "paquet de 54 carte en ordre" afin de ne pas pouvoir les piger lors d'un changement de carte
 	//Dans cette fonction, on utilise une fonction qui trie en ordre croissant de la valeur de chaque carte de la main
 	//Dans cette fonction, on utilise une fonction qui affiche relativement selon longueur de string total des noms de cartes de la main en cours
