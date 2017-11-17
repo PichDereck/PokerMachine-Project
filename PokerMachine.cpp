@@ -1,3 +1,5 @@
+//Dereck et Jeremy
+
 #include <iostream>
 #include <string.h>
 #include <time.h>
