@@ -1,3 +1,5 @@
+//Dereck Pichette et Jeremy Breton
+
 #include <iostream>
 #include <string.h>
 #include <time.h>
@@ -18,32 +20,38 @@ struct carte
 
 void DefinirPaquet(carte paquet[])
 {
-	//Cette fonction défini un paquet de carte contenant 54 cartes.
-}
-
-void MelangerPaquet(carte paquet[])
-{
-	//Cette fonction mélange un paquet de carte qui a le même format que celui dans la fonction DefinirPaquet
+	//Cette fonction définie un paquet de carte contenant 54 cartes.
 }
 
 void Hasard(carte paquet[])
 {
-	//Cette fonction joue selon la détermination au hasard d'un paquet
-	//cela aussi rappele la fonction MelangerPaquet
-	//Dans cette fonction, on utilise une fonction qui fait en sorte que les cartes de la main soit donné dans le tableau "paquet de 54 carte en ordre" afin de ne pas pouvoir les piger lors d'un changement de carte
-	//Dans cette fonction, on utilise une fonction qui trie en ordre croissant de la valeur de chaque carte de la main
-	//Dans cette fonction, on utilise une fonction qui affiche relativement selon longueur de string total des noms de cartes de la main en cours
-	//Dans cette fonction, on utilise une fonction qui vérifie le multiple de gain et le renvoie en int dans la détermination de la main selon le multiple de gain
+	/*
+	Cette fonction joue selon la détermination au hasard d'un paquet
+	Dans cette fonction, on utilise une fonction qui mélange un paquet de carte qui a le même format que celui dans la fonction DefinirPaquet
+	
+	Dans cette fonction, on utilise une fonction qui fait en sorte que les cartes de la main
+	définies comme "données", donc il ne sera pas possible de les repiger si il y a un changement de cartes dans la main
+	
+	Dans cette fonction, on utilise une fonction qui trie en ordre croissant de la valeur de chaque carte de la main
+	
+	Dans cette fonction, on utilise une fonction qui affiche la main en cours
+	Dans cette fonction, on utilise une fonction qui vérifie le multiple de gain et le renvoie pour calculer le gain total
+	*/
 }
 
 void SelonFichier(carte paquetsf[])
 {
-	//Cette fonction est la fonction principale lors du choix de jouer selon le fichier de mains prédéfinies
-	//Dans cette fonction, on utilise une fonction défini un paquet de carte contenant 54 cartes.
-	//Dans cette fonction, on utilise une fonction qui fait en sorte que les cartes de la main soit donné dans le tableau "paquet de 54 carte en ordre" afin de ne pas pouvoir les piger lors d'un changement de carte
-	//Dans cette fonction, on utilise une fonction qui trie en ordre croissant de la valeur de chaque carte de la main
-	//Dans cette fonction, on utilise une fonction qui affiche relativement selon longueur de string total des noms de cartes de la main en cours
-	//Dans cette fonction, on utilise une fonction qui vérifie le multiple de gain et le renvoie en int dans la détermination de la main selon le multiple de gain
+	/*
+	Cette fonction est la fonction principale lors du choix de jouer selon le fichier de mains prédéfinies	
+	Dans cette fonction, on utilise une fonction qui mélange un paquet de carte qui a le même format que celui dans la fonction DefinirPaquet
+	
+	Dans cette fonction, on utilise une fonction qui fait en sorte que les cartes de la main
+	définies comme "données", donc il ne sera pas possible de les repiger si il y a un changement de cartes dans la main
+	
+	Dans cette fonction, on utilise une fonction qui trie en ordre croissant de la valeur de chaque carte de la main
+	Dans cette fonction, on utilise une fonction qui affiche la main en cours
+	Dans cette fonction, on utilise une fonction qui vérifie le multiple de gain et le renvoie pour calculer le gain total
+	*/
 }
 
 int main()
@@ -64,7 +72,6 @@ int main()
 		{
 			case 1:
 		        DefinirPaquet(paquet);
-		        MelangerPaquet(paquet);
 		        Hasard(paquet);
 			    break;
 			case 2:
