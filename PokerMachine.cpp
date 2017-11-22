@@ -1,4 +1,4 @@
-//Dereck et Jeremy
+//Dereck Pichette et Jeremy Breton
 
 #include <iostream>
 #include <string.h>
@@ -521,7 +521,12 @@ void SelonFichier(carte paquetsf[])
 									}			
 								}
 							}
-								
+							
+							for(int i=0;i<5;i++)
+							{
+								postochange[pos]=false;
+							}
+							
 							BubbleSort(paquettxt);
 							FormatAffMain(paquettxt);
 							multiple = CheckHand(paquettxt,paquetsf);
@@ -579,7 +584,6 @@ int main()
 		{
 			case 1:
 		        DefineDeck(paquet);
-		        ShuffleDeck(paquet);
 		        Hasard(paquet);
 			    break;
 			case 2:
