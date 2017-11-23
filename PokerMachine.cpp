@@ -84,7 +84,7 @@ void DonneTrue(carte paquettxt[], carte paquetsf[])
 		for(int k=0;k<54;k++)
 		{
 			if((paquettxt[i].valeur==paquetsf[k].valeur)
-				&&(paquettxt[i].sorte==paquetsf[k].sorte))
+				 and (paquettxt[i].sorte==paquetsf[k].sorte))
 			{
 				paquetsf[k].donne=true;
 			}
@@ -146,7 +146,7 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 			 	}
 			}
 			
-			if(cartes[0].valeur==cartes[1].valeur&&cartes[3].valeur==cartes[4].valeur)
+			if(cartes[0].valeur==cartes[1].valeur and cartes[3].valeur==cartes[4].valeur)
 			{
 				tmp=3;
 			}
@@ -154,15 +154,15 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 			//Regarde si Three of a kind	
 			for(int i=0;i<=2;i++)
 			{
-				if(cartes[i].valeur==cartes[i+1].valeur&&cartes[i].valeur==cartes[i+2].valeur)
+				if(cartes[i].valeur==cartes[i+1].valeur and cartes[i].valeur==cartes[i+2].valeur)
 				{
 					tmp=5;
 				}
 			}
 			
 			//Regarde si Full House
-			if((cartes[0].valeur==cartes[1].valeur&&cartes[2].valeur==cartes[3].valeur&&cartes[2].valeur==cartes[4].valeur)
-				or(cartes[0].valeur==cartes[1].valeur&&cartes[0].valeur==cartes[2].valeur&&cartes[3].valeur==cartes[4].valeur))
+			if((cartes[0].valeur==cartes[1].valeur and cartes[2].valeur==cartes[3].valeur and cartes[2].valeur==cartes[4].valeur)
+				or(cartes[0].valeur==cartes[1].valeur and cartes[0].valeur==cartes[2].valeur and cartes[3].valeur==cartes[4].valeur))
 			{
 				tmp=10;
 			}
@@ -170,28 +170,28 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 			//Regarde si Flush
 			if(tmp<30)
 			{
-				if(cartes[0].sorte==cartes[1].sorte&&cartes[0].sorte==cartes[2].sorte&&cartes[0].sorte==cartes[3].sorte)
+				if(cartes[0].sorte==cartes[1].sorte and cartes[0].sorte==cartes[2].sorte and cartes[0].sorte==cartes[3].sorte)
 				{
 					tmp=15;
 				}		
 			}
 			
 			//Regarde si Four of a kind
-			if((cartes[0].valeur==cartes[1].valeur&&cartes[0].valeur==cartes[2].valeur&&cartes[0].valeur==cartes[3].valeur)
-				or(cartes[1].valeur==cartes[2].valeur&&cartes[1].valeur==cartes[3].valeur&&cartes[1].valeur==cartes[4].valeur))
+			if((cartes[0].valeur==cartes[1].valeur and cartes[0].valeur==cartes[2].valeur and cartes[0].valeur==cartes[3].valeur)
+				or(cartes[1].valeur==cartes[2].valeur and cartes[1].valeur==cartes[3].valeur and cartes[1].valeur==cartes[4].valeur))
 			{
 				tmp=25;
 			}
 			
 			//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Flush Royale
-			if(cartes[0].valeur==cartes[1].valeur-1&&cartes[0].valeur==cartes[2].valeur-2
-				&&cartes[0].valeur==cartes[3].valeur-3&&cartes[0].valeur==cartes[4].valeur-4)
+			if(cartes[0].valeur==cartes[1].valeur-1 and cartes[0].valeur==cartes[2].valeur-2
+				 and cartes[0].valeur==cartes[3].valeur-3 and cartes[0].valeur==cartes[4].valeur-4)
 			{
 				tmp=20; //Straight
-				if(cartes[0].sorte==cartes[1].sorte&&cartes[0].sorte==cartes[2].sorte&&cartes[0].sorte==cartes[3].sorte&&cartes[0].sorte==cartes[4].sorte)
+				if(cartes[0].sorte==cartes[1].sorte and cartes[0].sorte==cartes[2].sorte and cartes[0].sorte==cartes[3].sorte and cartes[0].sorte==cartes[4].sorte)
 				{
 					tmp=30; //Straight Flush
-					if(cartes[0].valeur==10&&cartes[1].valeur==11&&cartes[2].valeur==12&&cartes[3].valeur==13&&cartes[4].valeur==14)
+					if(cartes[0].valeur==10 and cartes[1].valeur==11 and cartes[2].valeur==12 and cartes[3].valeur==13 and cartes[4].valeur==14)
 					{
 						tmp=40; //Straight FLush Royale
 					}
@@ -417,6 +417,7 @@ void Hasard(carte paquet[])
 			}		
 		}
 		validchoice=false;
+		system("cls");
 	}
 }
 
@@ -557,12 +558,15 @@ void SelonFichier(carte paquetsf[])
 			changed=false;
 			validchoice=false;
 			fichierlecture>>mise;
+			system("cls");
 		}
 		fin=true;
 		cout<<endl<<"---------------"<<endl;
 		cout<<"FIN DU FICHIER";
 		cout<<endl<<"---------------"<<endl;
-		fichierlecture.close();	
+		fichierlecture.close();
+		system("PAUSE");
+		system("cls");
 	}
 }
 
@@ -579,6 +583,7 @@ int main()
 		cout<<"3 - Quitter le jeu de poker"<<endl;
 		cout<<"Entrez votre choix : ";
 		cin>>choix;
+		system("cls");
 		
 		switch (choix)
 		{
