@@ -558,6 +558,7 @@ void SelonFichier(carte paquetsf[])
 			changed=false;
 			validchoice=false;
 			fichierlecture>>mise;
+			system("PAUSE");
 			system("cls");
 		}
 		fin=true;
