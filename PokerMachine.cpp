@@ -9,6 +9,8 @@
 #include <iomanip>
 #include <windows.h>
 
+//***Pour la couleur des cartes et des pertes/gains
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 #define textcolor(c) SetConsoleTextAttribute(console,c|BACKGROUND_RED|BACKGROUND_GREEN|BACKGROUND_BLUE|BACKGROUND_INTENSITY);
 #define defaultcolor(c) SetConsoleTextAttribute(console,c);
 #define red 12
@@ -16,10 +18,9 @@
 #define magenta 13
 #define green 10
 #define white 15
+//***
 
 using namespace std;
-
-HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 struct carte
 {
@@ -29,8 +30,8 @@ struct carte
 	bool donne=false;	
 };
 
-/*Cette fonction défini un paquet de carte contenant 54 cartes. À la fin de la fonction, ce paquet est défini comme un tableau du type variable ci-haut. Il est défini en ordre : 
-	{2,3,4...Q,K,AS|2,3,4...Q,K,AS|2,3,4...Q,K,AS|2,3,4...Q,K,AS|JK,JK}*/
+/*Cette fonction défini un paquet de carte contenant 54 cartes. À la fin de la fonction, ce paquet est défini comme un tableau du type variable ci-haut. 
+	Il est défini en ordre : {2,3,4...Q,K,AS|2,3,4...Q,K,AS|2,3,4...Q,K,AS|2,3,4...Q,K,AS|JK,JK}*/
 void DefineDeck(carte paquet[])
 {
 	int k=0,j=0;
@@ -194,7 +195,7 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 				tmp=25;
 			}
 			
-			//Ces if imbriqués regarde si la main est une Straight, Straight FLush ou Straight Flush Royale
+			//Ces IF imbriqués regardent si la main est une Straight, Straight Flush ou Straight Flush Royale
 			if(cartes[0].valeur==cartes[1].valeur-1 and cartes[0].valeur==cartes[2].valeur-2
 				 and cartes[0].valeur==cartes[3].valeur-3 and cartes[0].valeur==cartes[4].valeur-4)
 			{
@@ -204,7 +205,7 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 					tmp=30; //Straight Flush
 					if(cartes[0].valeur==10 and cartes[1].valeur==11 and cartes[2].valeur==12 and cartes[3].valeur==13 and cartes[4].valeur==14)
 					{
-						tmp=40; //Straight FLush Royale
+						tmp=40; //Straight Flush Royale
 					}
 				}
 			}
@@ -215,7 +216,7 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 				multiple=tmp;
 				tmp=0;
 			}
-		}	
+		}
 	}
 	return multiple;
 }
@@ -223,79 +224,101 @@ int CheckHand(carte paquettxt[], carte paquetsf[])
 //Détermination de la combinaison selon le multiple
 void DetermMain(int multiple)
 {
+	defaultcolor(magenta);
+	cout<<"---------------------------"<<endl;
 	if(multiple==40)
 	{
-		cout<<"STRAIGHT FLUSH ROYALE - 40x";
+		cout<<"STRAIGHT FLUSH ROYALE - 40x"<<endl;
 	}
 	if(multiple==30)
 	{
-		cout<<"STRAIGHT FLUSH - 30x";
+		cout<<"STRAIGHT FLUSH - 30x"<<endl;
 	}
 	if(multiple==25)
 	{
-		cout<<"FOUR OF A KIND - 25x";
+		cout<<"FOUR OF A KIND - 25x"<<endl;
 	}
 	if(multiple==20)
 	{
-		cout<<"STRAIGHT - 20x";
+		cout<<"STRAIGHT - 20x"<<endl;
 	}
 	if(multiple==15)
 	{
-		cout<<"FLUSH - 15x";
+		cout<<"FLUSH - 15x"<<endl;
 	}
 	if(multiple==10)
 	{
-		cout<<"FULL HOUSE - 10x";
+		cout<<"FULL HOUSE - 10x"<<endl;
 	}
 	if(multiple==5)
 	{
-		cout<<"THREE OF A KIND - 5x";
+		cout<<"THREE OF A KIND - 5x"<<endl;
 	}
 	if(multiple==3)
 	{
-		cout<<"TWO PAIRS - 3x";
+		cout<<"TWO PAIRS - 3x"<<endl;
 	}
 	if(multiple==0)
 	{
-		cout<<"HIGH CARD - 0x";
+		cout<<"HIGH CARD - 0x"<<endl;
 	}
-	
-	cout<<endl;
+	cout<<"---------------------------"<<endl;
+	defaultcolor(white);
 }
 
 //Affichage relatif selon longueur de string total des noms de cartes de la main en cours
-void FormatAffMain(carte paquettxt[])
+void FormatAffMain(carte paquettxt[],int mise)
 {
 	int formatlength=0;
 	for(int i=0;i<5;i++)
 	{
-		formatlength = paquettxt[i].nom.length() + paquettxt[i].sorte.length() + formatlength + 5;
+		formatlength = paquettxt[i].nom.length() + paquettxt[i].sorte.length() + formatlength + 7;
 	}
 	
+	cout<<fixed<<setprecision(2)<<"Voici votre mise : "<<mise<<"$"<<endl;
+	
+	defaultcolor(green);
 	cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 	for(int i=0;i<5;i++)
 	{
-		cout<<"/";
+		cout<<"| ";
 		
-		if(paquettxt[i].sorte=="carreau" or paquettxt[i].sorte=="coeur")
+		if(paquettxt[i].sorte=="carreau" or paquettxt[i].sorte=="coeur") //Si les cartes sont carreaux ou coeurs, utilisation des #define en haut pour mettre rouge
 		{
 			textcolor(red);
 		}
-		else if(paquettxt[i].sorte=="jk1" or paquettxt[i].sorte=="jk2")
+		else if(paquettxt[i].sorte=="jk1" or paquettxt[i].sorte=="jk2") //Si les cartes sont des jokers, utilisation des #define en haut pour mettre magenta
 		{
 			textcolor(magenta);
 		}
-		else
+		else 															//Tout autre chose (Juste pique ou trèfle), utilisation des #define en haut pour mettre noir
 		{
 			textcolor(black);
 		}
-		
 		cout<<" "<<paquettxt[i].nom<<"-"<<paquettxt[i].sorte<<" ";
-		
-		defaultcolor(white);
-		cout<<"/";
+	
+		defaultcolor(green);
+		cout<<" |";
 	}
 	cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
+	defaultcolor(white);
+}
+
+//Calcule et affichage des gains ou pertes
+void AffichageGains(int multiple, int mise)
+{
+
+	if(multiple==0)
+	{
+		defaultcolor(red);
+		cout<<"Vos pertes : "<<-(mise)<<endl;
+	}
+	else
+	{
+		defaultcolor(green);
+		cout<<"Vos gains : "<<multiple*mise<<endl;			
+	}
+	defaultcolor(white);
 }
 
 //Cette fonction joue selon le hasard d'un paquet
@@ -323,11 +346,12 @@ void Hasard(carte paquet[])
 		
 		while(mise<=0)
 		{
-			cout<<endl<<"Veuillez entrer votre mise : ";
+			cout<<"Veuillez entrer votre mise : ";
 			cin>>mise;
 		}
 		
-		FormatAffMain(main);
+		system("cls");
+		FormatAffMain(main,mise);
 		
 		//Va me chercher le gain à multiplier avec la mise selon la main
 		multiple = CheckHand(main,paquet);
@@ -343,12 +367,16 @@ void Hasard(carte paquet[])
 				switch (choix)
 				{
 					case 'O':
+						system("cls");
+						FormatAffMain(main,mise);
 						validchoice=true;
 						changed=true;
 						cout<<"Combien de cartes voulez-vous changer ? ";
 						cin>>numbtochange;
 						while(numbtochange<1 or numbtochange>5)
 						{
+							system("cls");
+							FormatAffMain(main,mise);
 							cout<<"Choix Invalide"<<endl;
 							cout<<"Combien de cartes voulez-vous changer ? ";
 							cin>>numbtochange;							
@@ -363,12 +391,16 @@ void Hasard(carte paquet[])
 						}
 						else
 						{
+							system("cls");
+							FormatAffMain(main,mise);
 							cout<<"Quelles positions de carte voulez-vous changer ? "<<endl;
 							for(int i=0;i<numbtochange;i++)
 							{
 								cin>>pos;
 								if(pos<1 or pos>5 or postochange[pos+1]==true)
 								{
+									system("cls");
+									FormatAffMain(main,mise);
 									cout<<"Choix Invalide"<<endl;
 									i--;
 								}
@@ -394,41 +426,34 @@ void Hasard(carte paquet[])
 						}
 						
 						BubbleSort(main);
-						FormatAffMain(main);
+						system("cls");
+						FormatAffMain(main,mise);
 						multiple = CheckHand(main,paquet);
 						DetermMain(multiple);
 					    break;
 					case 'N':
+						system("cls");
+						FormatAffMain(main,mise);
 						validchoice=true;
 						DetermMain(multiple);
 					    break;
 					default:
-					    cout << "Choix invalide" << endl << endl;
+						system("cls");
+						FormatAffMain(main,mise);
+					    cout<< "Choix invalide"<< endl;
 					    validchoice=false;
 					    break;
 				}		
 			}			
 		}
 		
-		//Calcule gains ou pertes
-		if(multiple==0)
-		{
-			defaultcolor(red);
-			cout<<"Vos pertes : "<<-(mise)<<endl;
-		}
-		else
-		{
-			defaultcolor(green);
-			cout<<"Vos gains : "<<multiple*mise<<endl;			
-		}
-		defaultcolor(white);
+		AffichageGains(multiple,mise);
 		
 		changed=false;
 		validchoice=false;
-		
 		while(!validchoice)
 		{
-			cout<<"Voulez vous continuer ? (O/N) ";
+			cout<<endl<<"Voulez vous continuer ? (O/N) ";
 			cin>>choix;
 			choix=toupper(choix);
 			
@@ -443,7 +468,9 @@ void Hasard(carte paquet[])
 					finjeu=true;
 				    break;
 				default:
-				    cout << "Choix invalide" << endl << endl;
+					system("cls");
+					FormatAffMain(main,mise);
+					cout<< "Choix invalide"<< endl;
 				    validchoice=false;
 				    break;
 			}		
@@ -486,9 +513,8 @@ void SelonFichier(carte paquetsf[])
 			DonneTrue(paquettxt,paquetsf);
 	
 			BubbleSort(paquettxt);
-			cout<<fixed<<setprecision(2)<<endl<<"Voici votre mise : "<<mise<<"$"<<endl;
 			
-			FormatAffMain(paquettxt);
+			FormatAffMain(paquettxt,mise);
 			
 			//Va me chercher le gain à multiplier avec la mise selon la main
 			multiple = CheckHand(paquettxt,paquetsf);
@@ -505,12 +531,16 @@ void SelonFichier(carte paquetsf[])
 					switch (choix)
 					{
 						case 'O':
+							system("cls");
+							FormatAffMain(paquettxt,mise);
 							validchoice=true;
 							changed=true;
 							cout<<"Combien de cartes voulez-vous changer ? ";
 							cin>>numbtochange;
 							while(numbtochange<1 or numbtochange>5)
 							{
+								system("cls");
+								FormatAffMain(paquettxt,mise);
 								cout<<"Choix Invalide"<<endl;
 								cout<<"Combien de cartes voulez-vous changer ? ";
 								cin>>numbtochange;							
@@ -525,12 +555,16 @@ void SelonFichier(carte paquetsf[])
 							}
 							else
 							{
+								system("cls");
+								FormatAffMain(paquettxt,mise);
 								cout<<"Quelles positions de carte voulez-vous changer ? "<<endl;
 								for(int i=0;i<numbtochange;i++)
 								{
 									cin>>pos;
 									if(pos<1 or pos>5 or postochange[pos+1]==true)
 									{
+										system("cls");
+										FormatAffMain(paquettxt,mise);
 										cout<<"Choix Invalide"<<endl;
 										i--;
 									}
@@ -561,34 +595,28 @@ void SelonFichier(carte paquetsf[])
 							}
 							
 							BubbleSort(paquettxt);
-							FormatAffMain(paquettxt);
+							system("cls");
+							FormatAffMain(paquettxt,mise);
 							multiple = CheckHand(paquettxt,paquetsf);
 							DetermMain(multiple);
 						    break;
 						case 'N':
+							system("cls");
+							FormatAffMain(paquettxt,mise);
 							validchoice=true;
 							DetermMain(multiple);
 						    break;
 						default:
-						    cout << "Choix invalide" << endl << endl;
+							system("cls");
+							FormatAffMain(paquettxt,mise);
+						    cout<<"Choix invalide"<< endl;
 						    validchoice=false;
 						    break;
 					}		
 				}			
 			}
 			
-			//Calcule gains ou pertes
-			if(multiple==0)
-			{
-				defaultcolor(red);
-				cout<<"Vos pertes : "<<-(mise)<<endl;
-			}
-			else
-			{
-				defaultcolor(green);
-				cout<<"Vos gains : "<<multiple*mise<<endl;			
-			}
-			defaultcolor(white);
+			AffichageGains(multiple,mise);
 			
 			changed=false;
 			validchoice=false;
@@ -597,9 +625,11 @@ void SelonFichier(carte paquetsf[])
 			system("cls");
 		}
 		fin=true;
-		cout<<endl<<"---------------"<<endl;
-		cout<<"FIN DU FICHIER";
-		cout<<endl<<"---------------"<<endl;
+		defaultcolor(magenta);
+		cout<<"---------------"<<endl;
+		cout<<"FIN DU FICHIER"<<endl;
+		cout<<"---------------"<<endl;
+		defaultcolor(white);
 		fichierlecture.close();
 		system("PAUSE");
 		system("cls");
@@ -607,7 +637,7 @@ void SelonFichier(carte paquetsf[])
 }
 
 int main()
-{
+{	
 	int choix;
 	carte paquet[54];
 	bool fin=false;
@@ -638,7 +668,6 @@ int main()
 			default:
 			    cout << "Choix invalide" << endl << endl;
 			    break;
-		}
-		cout<<endl;		
+		}	
 	}
 }
