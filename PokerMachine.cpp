@@ -7,8 +7,19 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#include <windows.h>
+
+#define textcolor(c) SetConsoleTextAttribute(console,c|BACKGROUND_RED|BACKGROUND_GREEN|BACKGROUND_BLUE|BACKGROUND_INTENSITY);
+#define defaultcolor(c) SetConsoleTextAttribute(console,c);
+#define red 12
+#define black 0
+#define magenta 13
+#define green 10
+#define white 15
 
 using namespace std;
+
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 struct carte
 {
@@ -264,7 +275,25 @@ void FormatAffMain(carte paquettxt[])
 	cout<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 	for(int i=0;i<5;i++)
 	{
-		cout<<"| "<<paquettxt[i].nom<<"-"<<paquettxt[i].sorte<<" |";
+		cout<<"/";
+		
+		if(paquettxt[i].sorte=="carreau" or paquettxt[i].sorte=="coeur")
+		{
+			textcolor(red);
+		}
+		else if(paquettxt[i].sorte=="jk1" or paquettxt[i].sorte=="jk2")
+		{
+			textcolor(magenta);
+		}
+		else
+		{
+			textcolor(black);
+		}
+		
+		cout<<" "<<paquettxt[i].nom<<"-"<<paquettxt[i].sorte<<" ";
+		
+		defaultcolor(white);
+		cout<<"/";
 	}
 	cout<<endl<<setw(formatlength)<<setfill('-')<<"-"<<endl;
 }
@@ -384,12 +413,15 @@ void Hasard(carte paquet[])
 		//Calcule gains ou pertes
 		if(multiple==0)
 		{
+			defaultcolor(red);
 			cout<<"Vos pertes : "<<-(mise)<<endl;
 		}
 		else
 		{
+			defaultcolor(green);
 			cout<<"Vos gains : "<<multiple*mise<<endl;			
 		}
+		defaultcolor(white);
 		
 		changed=false;
 		validchoice=false;
@@ -548,12 +580,15 @@ void SelonFichier(carte paquetsf[])
 			//Calcule gains ou pertes
 			if(multiple==0)
 			{
-				cout<<"Vos pertes : "<<-mise<<endl;
+				defaultcolor(red);
+				cout<<"Vos pertes : "<<-(mise)<<endl;
 			}
 			else
 			{
+				defaultcolor(green);
 				cout<<"Vos gains : "<<multiple*mise<<endl;			
 			}
+			defaultcolor(white);
 			
 			changed=false;
 			validchoice=false;
